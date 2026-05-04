@@ -36,7 +36,7 @@ gradle.properties
 当前构建产物默认位于：
 
 ```text
-build/libs/online-music-mod-1.0.21.jar
+build/libs/online-music-mod-1.0.22.jar
 ```
 
 ## 安装部署
@@ -62,29 +62,9 @@ build/libs/online-music-mod-1.0.21.jar
 
 推荐只提供 `MUSIC_U`，也可以提供完整 Cookie。mod 会自动提取 `MUSIC_U` 并保存。
 
-### 方法一：聊天命令直接设置
+`/gmusic token set ...` 已禁用，不能再通过聊天框提交 `MUSIC_U` 或完整 Cookie。原因是 Minecraft 输入框有长度限制，完整 Cookie 很容易被截断；同时聊天框也不适合输入敏感登录凭证。
 
-房主或 OP 输入：
-
-```text
-/gmusic token set MUSIC_U=你的值
-```
-
-如果聊天框放得下完整 Cookie，也可以输入：
-
-```text
-/gmusic token set 完整Cookie
-```
-
-设置成功后检查识别状态：
-
-```text
-/gmusic token check
-```
-
-### 方法二：本地文件读取，推荐用于完整 Cookie
-
-聊天框太短时，用本地文件方式。
+请统一使用本地文件读取方式。
 
 1. 在游戏内输入：
 
@@ -323,7 +303,7 @@ build/libs/
 
 ### `/gmusic token check` 显示没有登录
 
-重新复制当前浏览器或网易云客户端的 `MUSIC_U`。如果复制的是完整 Cookie，建议用 `/gmusic token path` 的本地文件方式，不要塞进聊天框。
+重新复制当前浏览器或网易云客户端的 `MUSIC_U`，放入 `/gmusic token path` 显示的本地文件，然后执行 `/gmusic token load`。不要使用聊天框提交凭证。
 
 ### VIP 歌曲只能播放一小段
 
@@ -333,7 +313,7 @@ build/libs/
 /gmusic token check
 ```
 
-如果仍然显示未登录或 VIP 未识别，重新设置最新 `MUSIC_U`。
+如果仍然显示未登录或 VIP 未识别，更新本地凭证文件里的 `MUSIC_U` 或完整 Cookie，然后重新执行 `/gmusic token load`。
 
 ### 游戏声音关了还有点歌声音
 

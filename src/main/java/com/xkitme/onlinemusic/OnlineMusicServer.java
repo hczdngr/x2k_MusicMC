@@ -96,9 +96,9 @@ public final class OnlineMusicServer implements ModInitializer {
 						.requires(source -> source.hasPermissionLevel(2))
 						.executes(context -> withSeparator(context.getSource(), () -> tokenHelp(context.getSource())))
 						.then(literal("set")
-								.then(argument("cookieOrMusicU", StringArgumentType.greedyString())
-										.executes(context -> withSeparator(context.getSource(), () -> setToken(context.getSource(),
-												StringArgumentType.getString(context, "cookieOrMusicU"))))))
+								.executes(context -> withSeparator(context.getSource(), () -> disabledTokenSet(context.getSource())))
+								.then(argument("ignored", StringArgumentType.greedyString())
+										.executes(context -> withSeparator(context.getSource(), () -> disabledTokenSet(context.getSource())))))
 						.then(literal("clear")
 								.executes(context -> withSeparator(context.getSource(), () -> clearToken(context.getSource()))))
 						.then(literal("load")
@@ -242,9 +242,8 @@ public final class OnlineMusicServer implements ModInitializer {
 		send(source, commandLine("/gmusic lyrics anim on/off", "打开或关闭歌词上飞动效"));
 		send(source, commandLine("/gmusic panel on/off", "打开或关闭右侧歌曲面板"));
 		if (source.hasPermissionLevel(2)) {
-			send(source, commandLine("/gmusic token set <MUSIC_U 或完整 cookie>", "房主/OP 保存网易云登录凭证"));
-			send(source, commandLine("/gmusic token load", "从服务器本地文件读取网易云登录凭证"));
 			send(source, commandLine("/gmusic token path", "显示本地凭证文件位置"));
+			send(source, commandLine("/gmusic token load", "从服务器本地文件读取网易云登录凭证"));
 			send(source, commandLine("/gmusic token check", "检查网易云是否识别为登录/VIP"));
 			send(source, commandLine("/gmusic stop", "停止全员播放并清空队列"));
 		}
@@ -280,9 +279,9 @@ public final class OnlineMusicServer implements ModInitializer {
 
 	private int tokenHelp(ServerCommandSource source) {
 		send(source, success("登录凭证只保存在房主/服务器本机，不会发给其他玩家。"));
-		send(source, commandLine("/gmusic token set <MUSIC_U 或完整 cookie>", "保存网易云登录凭证"));
-		send(source, commandLine("/gmusic token load", "读取 config/x2k_netease_cookie.txt"));
+		send(source, info("聊天框设置登录凭证已禁用，请使用本地文件，避免字数限制和误发。"));
 		send(source, commandLine("/gmusic token path", "显示本地凭证文件位置"));
+		send(source, commandLine("/gmusic token load", "读取 config/x2k_netease_cookie.txt"));
 		send(source, commandLine("/gmusic token status", "查看是否已配置，显示会自动打码"));
 		send(source, commandLine("/gmusic token check", "实时检查网易云账号和 VIP 识别状态"));
 		send(source, commandLine("/gmusic token clear", "删除本机保存的登录凭证"));
@@ -302,7 +301,7 @@ public final class OnlineMusicServer implements ModInitializer {
 		}
 		if (!CONFIG.hasNeteaseCookie()) {
 			sendPanelResults(player, keywords, safePage, false,
-					"还没有设置网易云登录凭证。房主/OP 需要先配置 MUSIC_U。", List.of());
+					"还没有设置网易云登录凭证。房主/OP 请用 /gmusic token path 创建本地文件，再用 /gmusic token load 读取。", List.of());
 			return;
 		}
 
@@ -488,22 +487,11 @@ public final class OnlineMusicServer implements ModInitializer {
 		return 1;
 	}
 
-	private int setToken(ServerCommandSource source, String cookieOrMusicU) {
-		CONFIG.setNeteaseCookie(cookieOrMusicU);
-		if (!CONFIG.hasMusicU()) {
-			CONFIG.clearNeteaseCookie();
-			send(source, error("这串内容里没有识别到 MUSIC_U，已拒绝保存。Minecraft 聊天框可能会截断超长 cookie，请只复制 MUSIC_U=后面的值，或直接编辑 config/online_music.json。"));
-			return 0;
-		}
-
-		try {
-			CONFIG.save();
-			send(source, success("网易云登录凭证已保存在房主/服务器本机：" + CONFIG.maskedNeteaseCookie()));
-			return 1;
-		} catch (IOException exception) {
-			send(source, error("保存登录凭证失败：" + exception.getMessage()));
-			return 0;
-		}
+	private int disabledTokenSet(ServerCommandSource source) {
+		send(source, error("/gmusic token set 已禁用，不能在聊天框里提交 MUSIC_U 或完整 Cookie。"));
+		send(source, info("请先输入 /gmusic token path，按显示路径把 MUSIC_U=... 或完整 Cookie 放入本地文件。"));
+		send(source, info("保存文件后再输入 /gmusic token load。"));
+		return 0;
 	}
 
 	private int clearToken(ServerCommandSource source) {
@@ -542,7 +530,7 @@ public final class OnlineMusicServer implements ModInitializer {
 	private int tokenPath(ServerCommandSource source) {
 		try {
 			CONFIG.prepareCookieFile();
-			send(source, info("请把 MUSIC_U=... 放到这个文件："));
+			send(source, info("请把 MUSIC_U=... 或完整 Cookie 放到这个本地文件："));
 			send(source, success(CONFIG.cookieFilePath().toAbsolutePath().toString()));
 			send(source, info("保存文件后，在游戏内执行 /gmusic token load"));
 			return 1;
@@ -568,10 +556,10 @@ public final class OnlineMusicServer implements ModInitializer {
 				NeteaseMusicService.AccountStatus status = NETEASE.checkAccount(CONFIG.neteaseCookie());
 				send(source, status.loggedIn()
 						? success("网易云已识别登录：" + displayAccount(status))
-						: error("网易云没有识别为已登录。请重新复制当前浏览器/客户端的 MUSIC_U 或完整 cookie。"));
+						: error("网易云没有识别为已登录。请更新本地凭证文件后重新执行 /gmusic token load。"));
 				send(source, status.vipActive()
 						? success("VIP 已识别：" + displayVip(status))
-						: error("VIP 未识别：" + displayVip(status) + "。如果你确认账号有 VIP，请重新设置最新 MUSIC_U。"));
+						: error("VIP 未识别：" + displayVip(status) + "。如果你确认账号有 VIP，请更新本地凭证文件后重新执行 /gmusic token load。"));
 			} catch (Exception exception) {
 				send(source, error("检查网易云登录/VIP 状态失败：" + exception.getMessage()));
 			}
@@ -772,7 +760,7 @@ public final class OnlineMusicServer implements ModInitializer {
 		if (CONFIG.hasNeteaseCookie()) {
 			return true;
 		}
-		send(source, error("还没有设置网易云登录凭证。房主/OP 可以输入 /gmusic token set <MUSIC_U 或完整 cookie>。"));
+		send(source, error("还没有设置网易云登录凭证。房主/OP 请先输入 /gmusic token path，再把凭证放入本地文件并执行 /gmusic token load。"));
 		return false;
 	}
 
