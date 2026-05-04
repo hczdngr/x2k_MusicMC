@@ -1,10 +1,13 @@
 # x²k点歌
+<img width="1672" height="941" alt="6f6b1463f8b660d3c8a969b2fd845acf" src="https://github.com/user-attachments/assets/ede225b8-d834-4347-a6b0-d427fb7a15fd" />
+
 
 `x²k点歌` 是一个 Fabric 1.20.1 的 Minecraft 在线点歌 mod。它使用房主或服务器本机保存的网易云登录凭证获取播放地址，然后把同一首歌同步给所有安装了 mod 的玩家播放。
 
 > 请只使用你自己合法拥有和有权使用的网易云账号凭证。不要把 `MUSIC_U`、完整 Cookie 或 `config/online_music.json` 上传到公开仓库。
 
 ## 功能特性
+<img width="2559" height="1599" alt="cee685a61d9eeff99a14b204ea6fac19" src="https://github.com/user-attachments/assets/74a82b30-4abe-4d58-b0f1-4d00016b11ba" />
 
 - 全局一起听：一名玩家点歌后，所有开启个人收听的玩家同步播放同一首歌。
 - 房主凭证：网易云登录凭证只保存在房主或服务器本机，不会发给其他玩家。
@@ -113,6 +116,7 @@ config/online_music.json
 这个文件包含敏感登录信息，不要发给别人，也不要提交到 GitHub。
 
 ## 基础使用
+<img width="2559" height="1599" alt="dbba70420bd72731b2d3324c30424026" src="https://github.com/user-attachments/assets/034535fd-b05c-4286-b2ef-d13793d8f5e6" />
 
 ### 打开点歌面板
 
