@@ -116,7 +116,7 @@ config/online_music.json
 这个文件包含敏感登录信息，不要发给别人，也不要提交到 GitHub。
 
 ## 基础使用
-<img width="2559" height="1599" alt="dbba70420bd72731b2d3324c30424026" src="https://github.com/user-attachments/assets/034535fd-b05c-4286-b2ef-d13793d8f5e6" />
+<img width="2559" height="1599" alt="91d20ae9161639e6c90779ae28938aaa" src="https://github.com/user-attachments/assets/2bd4e082-3b5f-4a52-ba10-d3a299ed3f22" />
 
 ### 打开点歌面板
 
