@@ -1,0 +1,28 @@
+{
+	"schemaVersion": 1,
+	"id": "online_music",
+	"version": "${version}",
+	"name": "x²k点歌",
+	"description": "网易云全局点歌、队列、歌词和同步播放。",
+	"authors": [
+		"xkitme"
+	],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/online_music/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.xkitme.onlinemusic.OnlineMusicServer"
+		],
+		"client": [
+			"com.xkitme.onlinemusic.OnlineMusicClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.15.0",
+		"fabric-api": "*",
+		"minecraft": "~1.20.1",
+		"java": ">=17"
+	}
+}

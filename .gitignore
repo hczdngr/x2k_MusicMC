@@ -1,0 +1,14 @@
+.gradle/
+.codex-ref/
+build/
+run/
+out/
+*.iml
+.idea/
+.vscode/
+config/
+logs/
+*.log
+online_music.json
+x2k_netease_cookie.txt
+src/main/resources/assets/online_music/font/*.ttf
